@@ -1,5 +1,8 @@
 import Foundation
 import JWT
+import Logging
+
+let logger = Logger(label: "FCM")
 
 extension FCM {
     func generateJWT() throws -> String {
@@ -13,6 +16,7 @@ extension FCM {
             fatalError("FCM unable to prepare PEM data for JWT")
         }
         gAuth = gAuth.updated()
+        logger.info("IAT: \(gAuth.iat.value.timeIntervalSince1970) EXP: \(gAuth.exp.value.timeIntervalSince1970)")
         self.gAuth = gAuth
         let pk = try RSAKey.private(pem: pemData)
         let signer = JWTSigner.rs256(key: pk)
